@@ -5,7 +5,7 @@ export enum enumRole {
   ENGINEER = 'ENGINEER',
   ADMIN = 'ADMIN',
 }
-export class DtoCreateUser {
+export class DtoCreateEmployee {
   @IsString()
   @IsNotEmpty()
   name: string;

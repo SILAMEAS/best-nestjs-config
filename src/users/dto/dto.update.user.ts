@@ -1,6 +1,4 @@
-type typeRole = 'INTERN' | 'ENGINEER' | 'ADMIN';
-export class DtoCreateUser {
-  name: string;
-  email: string;
-  role: typeRole;
-}
+import { PartialType } from '@nestjs/mapped-types';
+import { DtoCreateUser } from './dto.create.user';
+
+export class DtoUpdateUser extends PartialType(DtoCreateUser) {}
