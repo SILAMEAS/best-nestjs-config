@@ -2,7 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { enumRole } from '../users/dto/dto.create.user';
 import { DatabaseService } from '../database/database.service';
-import { $encrytToHash } from '../database/utils/encrytPassword';
+import { $encrytToHash } from '../utils/encrytPassword';
+import { PaginationResponse } from '../utils/pagination';
 
 @Injectable()
 export class EmployeesService {
@@ -27,7 +28,8 @@ export class EmployeesService {
         },
       });
     }
-    return this.databaseService.employee.findMany();
+    // return this.databaseService.employee.findMany();
+    return PaginationResponse({});
   }
 
   async findOne(id: number) {

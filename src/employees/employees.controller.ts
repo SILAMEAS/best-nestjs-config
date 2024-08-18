@@ -7,17 +7,15 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Post,
-  Query, UseGuards,
-  ValidationPipe
-} from "@nestjs/common";
+  Query,
+  ValidationPipe,
+} from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { enumRole } from '../users/dto/dto.create.user';
-import { DtoCreateEmployee } from './dto/dto.create.employee';
 import { DtoUpdateEmployee } from './dto/dto.update.employee';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { MyLoggerService } from '../my-logger/my-logger.service';
-import { AuthGuard } from "../auth/auth.guard";
+import { Public } from '../auth/decorators/public.decorator';
 
 @SkipThrottle()
 @Controller('employees')
@@ -30,6 +28,7 @@ export class EmployeesController {
   // create(@Body(ValidationPipe) createEmployeeDto: DtoCreateEmployee) {
   //   return this.employeesService.create(createEmployeeDto);
   // }
+  @Public()
   @SkipThrottle({ default: false })
   @Get()
   findAll(@Ip() ip: string, @Query('role') role?: enumRole) {

@@ -4,7 +4,7 @@ import { MyLoggerService } from '../my-logger/my-logger.service';
 import { EmployeesController } from '../employees/employees.controller';
 import { JwtService } from '@nestjs/jwt';
 import { DtoLogin } from './dto/dto.login';
-import { $encrytToPassword } from '../database/utils/encrytPassword';
+import { $encrytToPassword } from '../utils/encrytPassword';
 import { DtoCreateEmployee } from '../employees/dto/dto.create.employee';
 
 @Injectable()
