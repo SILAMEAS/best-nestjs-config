@@ -2,13 +2,18 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { enumRole } from '../users/dto/dto.create.user';
 import { DatabaseService } from '../database/database.service';
+import { $encrytToHash } from '../database/utils/encrytPassword';
 
 @Injectable()
 export class EmployeesService {
   constructor(private readonly databaseService: DatabaseService) {}
+
   async create(createEmployeeDto: Prisma.EmployeeCreateInput) {
     return this.databaseService.employee.create({
-      data: createEmployeeDto,
+      data: {
+        ...createEmployeeDto,
+        password: await $encrytToHash(createEmployeeDto.password),
+      },
     });
   }
 
@@ -29,12 +34,16 @@ export class EmployeesService {
     return this.databaseService.employee.findUnique({ where: { id } });
   }
   async findByEmail(email: string) {
-    return this.databaseService.employee.findUnique({ where: { email } });
+    console.log('email', email);
+    return this.databaseService.employee.findFirst({ where: { email } });
   }
 
   async update(id: number, updateEmployeeDto: Prisma.EmployeeUpdateInput) {
     return this.databaseService.employee.update({
-      data: updateEmployeeDto,
+      data: {
+        ...updateEmployeeDto,
+        password: await $encrytToHash(updateEmployeeDto.password as string),
+      },
       where: { id },
     });
   }

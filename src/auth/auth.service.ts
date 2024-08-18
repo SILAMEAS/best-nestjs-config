@@ -1,25 +1,40 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { EmployeesService } from '../employees/employees.service';
 import { MyLoggerService } from '../my-logger/my-logger.service';
-import { AuthController } from './auth.controller';
 import { EmployeesController } from '../employees/employees.controller';
+import { JwtService } from '@nestjs/jwt';
 import { DtoLogin } from './dto/dto.login';
+import { $encrytToPassword } from '../database/utils/encrytPassword';
+import { DtoCreateEmployee } from '../employees/dto/dto.create.employee';
 
 @Injectable()
 export class AuthService {
-  constructor(private employeesService: EmployeesService) {}
+  constructor(
+    private employeesService: EmployeesService,
+    private jwtService: JwtService,
+  ) {}
   private readonly logger = new MyLoggerService(EmployeesController.name);
-  async signIn(dtoLogin: DtoLogin): Promise<any> {
-    const user = await this.employeesService
-      .findByEmail(dtoLogin.email)
-      .then((r) => {
-        this.logger.log(r);
-        return r;
-      });
-    if (user?.password !== dtoLogin.password) {
+  async signIn(dtoLogin: DtoLogin): Promise<{ access_token: string }> {
+    const user = await this.employeesService.findByEmail(dtoLogin.email);
+    if (
+      !user ||
+      !(await $encrytToPassword(
+        dtoLogin.password,
+        (user as DtoCreateEmployee)?.password,
+      ))
+    ) {
       throw new UnauthorizedException();
+    } else {
+      const payload = {
+        sub: (user as { id: number })?.id,
+        email: (user as DtoCreateEmployee)?.email,
+      };
+      return {
+        access_token: await this.jwtService.signAsync(payload),
+      };
     }
-    const { password, ...result } = user;
-    return result;
+  }
+  async signUp(createEmployeeDto: DtoCreateEmployee) {
+    return await this.employeesService.create(createEmployeeDto);
   }
 }

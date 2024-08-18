@@ -7,31 +7,36 @@ export class UsersService {
   private tempUsers: any = [
     {
       id: 1,
-      name: 'Leanne Granham',
+      username: 'Leanne Granham',
+      password: '123',
       email: 'Sincere@aprill.biz',
       role: 'INTERN',
     },
     {
       id: 2,
-      name: 'Ervin Howll',
+      username: 'Ervin Howll',
+      password: '123',
       email: 'Shanna@melissa.tv',
       role: 'INTERN',
     },
     {
       id: 3,
-      name: 'Clementine Bauch',
+      username: 'Clementine Bauch',
+      password: '123',
       email: 'D@aprill.biz',
       role: 'ADMIN',
     },
     {
       id: 4,
-      name: 'Sila',
+      username: 'Sila',
+      password: '123',
       email: 'sila.meas@allweb.com.kh',
       role: 'ADMIN',
     },
     {
       id: 5,
-      name: 'Engineer',
+      username: 'Engineer',
+      password: '123',
       email: 'egnineer@allweb.com.kh',
       role: 'ENGINEER',
     },
@@ -50,6 +55,13 @@ export class UsersService {
   }
   findOne(id: number) {
     const foundUser = this.tempUsers.find((i) => i.id == id);
+    if (!foundUser) {
+      throw new NotFoundException('User not found');
+    }
+    return foundUser;
+  }
+  findByUsername(username: string) {
+    const foundUser = this.tempUsers.find((i) => i.username == username);
     if (!foundUser) {
       throw new NotFoundException('User not found');
     }
