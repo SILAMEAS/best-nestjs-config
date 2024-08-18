@@ -27,7 +27,11 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
 
     const myResponseObj: MyResponseObj = {
       statusCode: 500,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      }),
       path: request.url,
       response: '',
     };

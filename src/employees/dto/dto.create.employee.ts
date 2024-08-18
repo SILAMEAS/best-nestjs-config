@@ -11,6 +11,9 @@ export class DtoCreateEmployee {
   name: string;
   @IsEmail()
   email: string;
+  @IsString()
+  @IsNotEmpty()
+  password: string;
   @IsEnum(enumRole, {
     message: 'Valid role required',
   })
